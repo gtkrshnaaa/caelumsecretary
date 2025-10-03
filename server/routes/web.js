@@ -1,8 +1,16 @@
-// Web routes (optional SSR or static helpers)
+// Web routes (SPA fallback)
+// Comments in English only
 export default async function webRoutes(app) {
-  // Example root path returning a minimal HTML or redirect to index.html
-  app.get('/', async (_, reply) => {
-    // In production, index.html is in public/
-    return reply.type('text/html').send('<!doctype html><html><head><meta charset="utf-8"><title>Caelum Secretary</title></head><body><h1>Caelum Secretary</h1><p>Backend is running.</p></body></html>');
+  // Serve SPA index.html for root
+  app.get('/', async (_req, reply) => {
+    return reply.sendFile('index.html');
+  });
+
+  // Catch-all for client-side routes (avoid /api prefix)
+  app.get('/*', async (req, reply) => {
+    if (req.raw.url && req.raw.url.startsWith('/api')) {
+      return reply.callNotFound();
+    }
+    return reply.sendFile('index.html');
   });
 }
