@@ -1,6 +1,7 @@
 // API routes registration
 import { HealthController } from '../../app/Http/Controllers/HealthController.js';
 import { ProjectsController } from '../../app/Http/Controllers/ProjectsController.js';
+import { ChatController } from '../../app/Http/Controllers/ChatController.js';
 
 export default async function apiRoutes(app) {
   // Health
@@ -21,4 +22,17 @@ export default async function apiRoutes(app) {
       }
     }
   }, ProjectsController.create);
+
+  // Chat (AI)
+  app.post('/chat', {
+    schema: {
+      body: {
+        type: 'object',
+        required: ['message'],
+        properties: {
+          message: { type: 'string', minLength: 1 }
+        }
+      }
+    }
+  }, ChatController.chat);
 }
